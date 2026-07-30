@@ -1,3 +1,16 @@
+# Maven
+**/target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Logs
 nohup.out
-.idea
-Postgres_bindMount
+*.log
+
+# Other
+Postgres_bindMount/
