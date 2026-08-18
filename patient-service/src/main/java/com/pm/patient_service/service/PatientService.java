@@ -41,6 +41,7 @@ public class PatientService {
         Patient patient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
         billingServiceGrpcClient.createBillingAccount(patient.getId().toString(),patient.getName(),patient.getEmail());
         return PatientMapper.toDTO(patient);
+        
     }
 
     public PatientResponseDTO updateInfo(UUID id, PatientRequestDTO patientRequestDTO)
