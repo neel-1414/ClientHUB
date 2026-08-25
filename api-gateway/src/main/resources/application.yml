@@ -1,0 +1,20 @@
+
+  # REST CLIENT -> http://localhost:4004/api/patients
+  #API gateway is at 4004 localhost, recieves the api request
+  #API gateway -> http://patient-service:4000/patients
+#Patient service -> return Patient array
+server:
+  port: 4004
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: patient-service-route
+              uri: http://patient-service:4000
+              predicates:
+                - Path=/api/patients/**
+              filters:
+                - StripPrefix=1
