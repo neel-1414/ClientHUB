@@ -23,13 +23,15 @@ public class kafkaProducer {
         PatientEvent event = PatientEvent.newBuilder()
                 .setPatientId(patient.getId().toString())
                 .setName(patient.getName())
+                .setEmail(patient.getEmail() != null ? patient.getEmail() : "")
                 .setEventType("PATIENT_CREATED")
                 .build();
-        try{
+        try {
             kafkaTemplate.send("patient", event.toByteArray());
+            log.info("PatientCreated event sent successfully for patientId: {}", patient.getId());
         }
         catch (Exception e) {
-            log.error("Error sending PatientCreated event: {}",event);
+            log.error("Error sending PatientCreated event: {}", event, e);
         }
     }
 
