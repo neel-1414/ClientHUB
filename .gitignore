@@ -13,4 +13,5 @@ nohup.out
 *.log
 .token-lstk
 # Other
+localstack/
 Postgres_bindMount/
