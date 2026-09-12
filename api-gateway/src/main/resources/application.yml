@@ -12,16 +12,18 @@ spring:
       server:
         webflux:
           routes:
-
+          #login does not need validation or api gateway filter
             - id: auth-service-route
               uri: http://auth-service:4005
               predicates:
                 - Path=/auth/**
               filters:
                 - StripPrefix=1
+          #patient-service must have api gateway filter before forwarding the request to microservice
             - id: patient-service-route
               uri: http://patient-service:4000
               predicates:
                 - Path=/api/patients/**
               filters:
                 - StripPrefix=1
+                - JwtValidation #looks for any class ending with GatewayFilterFactory : this is convention
