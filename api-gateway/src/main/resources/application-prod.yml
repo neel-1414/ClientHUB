@@ -1,0 +1,29 @@
+
+# REST CLIENT -> http://localhost:4004/api/patients
+#API gateway is at 4004 localhost, recieves the api request
+#API gateway -> http://patient-service:4000/patients
+#Patient service -> return Patient array
+server:
+  port: 4004
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            #login does not need validation or api gateway filter
+            - id: auth-service-route
+              uri: http://host.docker.internal:4005
+              predicates:
+                - Path=/auth/**
+              filters:
+                - StripPrefix=1
+            #patient-service must have api gateway filter before forwarding the request to microservice
+            - id: patient-service-route
+              uri: http://host.docker.internal:4000
+              predicates:
+                - Path=/api/patients/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation #looks for any class ending with GatewayFilterFactory : this is convention
