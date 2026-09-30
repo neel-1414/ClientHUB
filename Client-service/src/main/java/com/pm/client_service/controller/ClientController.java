@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/patients")
-public class PatientController {
+public class ClientController {
     private final PatientService patientService;
 
-    public PatientController(PatientService patientService) {
+    public ClientController(PatientService patientService) {
         this.patientService = patientService;
     }
 
@@ -34,7 +34,6 @@ public class PatientController {
     }
 
     @PutMapping("/updatePatient/{id}")
-//@Validates({Default.class}) tells the spring the validate the patientRequestDTO using all the defaults in it
     public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable UUID id, @Validated({Default.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
         PatientResponseDTO patientResponseDTO = patientService.updateInfo(id, patientRequestDTO);
         return ResponseEntity.ok().body(patientResponseDTO);
@@ -44,6 +43,6 @@ public class PatientController {
     public ResponseEntity<Void> deletePatient(@PathVariable UUID id)
     {
         patientService.DeletePatient(id);
-        return  ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 }

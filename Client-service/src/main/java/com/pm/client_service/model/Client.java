@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-public class Patient {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -77,7 +77,4 @@ public class Patient {
     public void setId(UUID id) {
         this.id = id;
     }
-
-
-
 }

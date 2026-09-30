@@ -1,0 +1,13 @@
+syntax = "proto3";
+package project.events;
+option java_multiple_files = true;
+
+message ProjectEvent {
+  string projectId = 1;
+  string clientId = 2;
+  string developerId = 3;
+  string title = 4;
+  double budget = 5;
+  string receiptId = 6;
+  string eventType = 7;
+}

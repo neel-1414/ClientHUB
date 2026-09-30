@@ -1,8 +1,6 @@
-
-  # REST CLIENT -> http://localhost:4004/api/patients
-  #API gateway is at 4004 localhost, recieves the api request
-  #API gateway -> http://patient-service:4000/patients
-#Patient service -> return Patient array
+# REST CLIENT -> http://localhost:4004/api/patients or http://localhost:4004/api/projects
+# API gateway is at 4004 localhost, receives the API request
+# API gateway -> http://patient-service:4000/patients or /projects
 server:
   port: 4004
 
@@ -12,18 +10,26 @@ spring:
       server:
         webflux:
           routes:
-          #login does not need validation or api gateway filter
+            # login does not need validation or api gateway filter
             - id: auth-service-route
               uri: http://auth-service:4005
               predicates:
                 - Path=/auth/**
               filters:
                 - StripPrefix=1
-          #patient-service must have api gateway filter before forwarding the request to microservice
+            # patient-service / client-service route for clients
             - id: patient-service-route
               uri: http://patient-service:4000
               predicates:
                 - Path=/api/patients/**
               filters:
                 - StripPrefix=1
-                - JwtValidation #looks for any class ending with GatewayFilterFactory : this is convention
+                - JwtValidation
+            # project-service route for project management & developer actions
+            - id: project-service-route
+              uri: http://patient-service:4000
+              predicates:
+                - Path=/api/projects/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation

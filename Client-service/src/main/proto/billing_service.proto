@@ -1,16 +1,33 @@
 syntax = "proto3";
 option java_multiple_files = true;
-option java_package ='billing';
-service BillingService{
-  rpc createBillingAccount(BillingRequest) returns  (BillingResponse);
+option java_package = "billing";
+
+service BillingService {
+  rpc createBillingAccount(BillingRequest) returns (BillingResponse);
+  rpc generateReceipt(ReceiptRequest) returns (ReceiptResponse);
 }
-message BillingRequest{
+
+message BillingRequest {
   string patientId = 1;
   string name = 2;
   string email = 3;
 }
 
-message BillingResponse{
-  string accountId=1;
-  string status=2;
+message BillingResponse {
+  string accountId = 1;
+  string status = 2;
+}
+
+message ReceiptRequest {
+  string projectId = 1;
+  string clientId = 2;
+  string developerId = 3;
+  double amount = 4;
+}
+
+message ReceiptResponse {
+  string receiptId = 1;
+  string status = 2;
+  string generatedAt = 3;
+  double amount = 4;
 }
