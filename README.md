@@ -1,6 +1,6 @@
-# ClientHUB — Patient & Project Management System
+# ClientHUB — client & Project Management System
 
-A **microservices-based** client/patient management platform built with **Spring Boot 4.1**, **gRPC**, **Apache Kafka**, and **AWS CDK** (LocalStack). The system allows managing clients (patients), submitting and accepting freelance projects, generating billing receipts, and streaming analytics events — all behind a secure API Gateway with JWT authentication.
+A **microservices-based** client/client management platform built with **Spring Boot 4.1**, **gRPC**, **Apache Kafka**, and **AWS CDK** (LocalStack). The system allows managing clients (clients), submitting and accepting freelance projects, generating billing receipts, and streaming analytics events — all behind a secure API Gateway with JWT authentication.
 
 ---
 
@@ -27,7 +27,7 @@ flowchart LR
 
     Client -->|HTTP| GW
     GW -->|"/auth/**"| AUTH
-    GW -->|"/api/patients/**"| CS
+    GW -->|"/api/clients/**"| CS
     GW -->|"/api/projects/**"| CS
     JWT -.->|validate token| AUTH
     AUTH --- PG1
@@ -44,8 +44,8 @@ flowchart LR
 | API Gateway | Auth Service | HTTP | JWT token validation |
 | API Gateway | Client Service | HTTP (proxied) | Client & project CRUD |
 | Client Service | Billing Service | **gRPC** (port 9001) | Create billing accounts & generate receipts |
-| Client Service | Kafka | **Protobuf over Kafka** | Publish `patient` and `projects` events |
-| Analytics Service | Kafka | **Protobuf over Kafka** | Consume & log `patient` and `projects` events |
+| Client Service | Kafka | **Protobuf over Kafka** | Publish `client` and `projects` events |
+| Analytics Service | Kafka | **Protobuf over Kafka** | Consume & log `client` and `projects` events |
 
 ---
 
@@ -76,7 +76,7 @@ The single entry point for all external requests. Built on **Spring Cloud Gatewa
 
 - **Routes**:
   - `/auth/**` → Auth Service (no JWT filter)
-  - `/api/patients/**` → Client Service (JWT required)
+  - `/api/clients/**` → Client Service (JWT required)
   - `/api/projects/**` → Client Service (JWT required)
 - **JWT Validation Filter** — calls the Auth Service's `/validate` endpoint before forwarding requests.
 
@@ -93,7 +93,7 @@ Handles user authentication and JWT token management.
 
 ### 3. Client Service (`Client-service` — port 4000)
 
-Core business service managing clients (patients) and projects.
+Core business service managing clients (clients) and projects.
 
 #### Client Endpoints
 
@@ -134,14 +134,14 @@ Exposes a **gRPC server** for billing operations.
 
 | Topic | Event Type | Data |
 |---|---|---|
-| `patient` | `PatientEvent` | Client ID, name, email, event type |
+| `client` | `clientEvent` | Client ID, name, email, event type |
 | `projects` | `ProjectEvent` | Project ID, client ID, developer ID, title, budget, receipt ID, event type |
 
 ---
 
 ## Data Models
 
-### Client (Patient) Entity
+### Client (client) Entity
 
 | Field | Type | Constraints |
 |---|---|---|
@@ -233,7 +233,7 @@ Each service has a multi-stage `Dockerfile`:
 ```bash
 # Build images
 docker build -t auth-service ./auth-service
-docker build -t patient-service ./Client-service
+docker build -t client-service ./Client-service
 docker build -t billing-service ./billing-service
 docker build -t analytics-service ./analytics-service
 docker build -t api-gateway ./api-gateway
@@ -274,7 +274,7 @@ The system auto-seeds data on startup via `data.sql` files:
 | `client@test.com` | `password123` | `ROLE_CLIENT` |
 | `developer@test.com` | `password123` | `ROLE_DEVELOPER` |
 
-**Client Service** — 15 pre-loaded sample patients/clients.
+**Client Service** — 15 pre-loaded sample clients/clients.
 
 ---
 
@@ -287,14 +287,14 @@ cd Integeration-tests && mvn test
 ```
 
 - `AuthIntegrationTest` — Validates login returns a JWT token
-- `PatientIntegrationTest` — Validates authenticated patient listing
+- `clientIntegrationTest` — Validates authenticated client listing
 
 ---
 
 ## Project Structure
 
 ```
-Patient-Management-System/
+client-Management-System/
 ├── api-gateway/                  # Spring Cloud Gateway (WebFlux)
 │   └── src/main/java/.../filter/ #   JWT validation filter
 ├── auth-service/                 # Authentication & JWT service
@@ -341,11 +341,11 @@ curl -X POST http://localhost:4004/auth/login \
 
 ```bash
 # Get all clients
-curl http://localhost:4004/api/patients/getAllPatients \
+curl http://localhost:4004/api/clients/getAllclients \
   -H "Authorization: Bearer <token>"
 
 # Create a client
-curl -X POST http://localhost:4004/api/patients/createPatient \
+curl -X POST http://localhost:4004/api/clients/createclient \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"name": "New Client", "email": "new@example.com", "address": "123 St", "dateOfBirth": "1990-01-01"}'
@@ -380,7 +380,7 @@ service BillingService {
 }
 ```
 
-### `patient_events.proto` / `project_events.proto`
+### `client_events.proto` / `project_events.proto`
 
 Used for Kafka event serialization between Client Service (producer) and Analytics Service (consumer).
 
