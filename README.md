@@ -95,14 +95,14 @@ Handles user authentication and JWT token management.
 
 Core business service managing clients (patients) and projects.
 
-#### Client (Patient) Endpoints
+#### Client Endpoints
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/patients/getAllPatients` | List all clients |
-| `POST` | `/patients/createPatient` | Create a new client |
-| `PUT` | `/patients/updatePatient/{id}` | Update client info |
-| `DELETE` | `/patients/deletePatient/{id}` | Delete a client |
+| `GET` | `/client/getAllClient` | List all clients |
+| `POST` | `/client/createClient` | Create a new client |
+| `PUT` | `/client/updateClient/{id}` | Update client info |
+| `DELETE` | `/client/deleteClient/{id}` | Delete a client |
 
 #### Project Endpoints
 
