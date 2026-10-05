@@ -1,4 +1,4 @@
-# ClientHUB — client & Project Management System
+# ClientHUB: client & Project Management System
 
 A **microservices-based** client/client management platform built with **Spring Boot 4.1**, **gRPC**, **Apache Kafka**, and **AWS CDK** (LocalStack). The system allows managing clients (clients), submitting and accepting freelance projects, generating billing receipts, and streaming analytics events — all behind a secure API Gateway with JWT authentication.
 
